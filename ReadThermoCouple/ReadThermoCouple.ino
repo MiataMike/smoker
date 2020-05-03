@@ -38,7 +38,7 @@ void loop() {
 		Serial.print(voltage2);
 		Serial.print(",");
 		Serial.print(sensorValue3);
-		Serial.printf(",");
+		Serial.print(",");
 		Serial.print(voltage4);
 		Serial.print(",");
 		Serial.print(voltage5);

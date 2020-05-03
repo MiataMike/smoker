@@ -38,9 +38,9 @@ bytesToRead = 0
 
 while index < 80000:
     bytesToRead = bytesToRead + ser.inWaiting()
-    if bytesToRead > 22:
+    if bytesToRead > 20:
         data = str(ser.read(bytesToRead))
-        data_split = data[2:-5].split(',')
+        data_split = data[2:-1].split(',')
         if len(data_split) < 6:
             # Parse thermocouple data
             temperature1[index] = ((float(data_split[0]) - 1.25)/.005 * 9.0 / 5.0) + 32.0
