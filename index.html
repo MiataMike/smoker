@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Meat Smoker</title>
+</head>
+<body>
+<h1>Welcome to Smoke City</h1>
+<h3>Smoke Sesh Info</h3>
+<p>Target Meat: Pork (Default)<br>
+Target temperature: 200.0 F<br>
+Time Elapsed: 0.05 hr<br>
+Estimated Time to CompletionL TODO hr <br>
+<h3>Meat Information</h3>
+Probe 1 Temperature: SET_PROBE_1 F<br>
+Probe 1 Slope: TODO F/hr<br>
+Probe 2 Temperature: 89.94 F<br>
+Probe 2 Slope: TODO F/hr<br>
+<h3>Smoker Temperature</h3>
+Smoker1 Temperature: 1292.00 F<br>
+Smoker2 Temperature: 57.20 F<br>
+Average Smoker Temperature: 1268.34<br>
+
+CSV Date: <a href="ReadThermoCouple/test_001.csv">test_001.csv</a> <br>
+</p>
+
+<img src="ReadThermoCouple/test_001_probe.png">
+<img src="ReadThermoCouple/test_001_smoker.png"> <br>
+
+Page Created: <p id="date"></p>
+Last Updated: 5/3/2020 11:23<br>
+
+</body>
+</html>
+
+<!-- Script to get the current date and time -->
+<script>
+n = new Date();
+y = n.getFullYear();
+m = n.getMonth() + 1;
+d = n.getDate();
+h = n.getHours();
+mm = n.getMinutes();
+if (mm < 10) {
+  mm = "0" + mm;
+}
+
+if (h < 10) {
+  h = "0" + h
+}
+
+document.getElementById("date").innerHTML = m + "/" + d + "/" + y + " " + h + ":" + mm;
+</script>

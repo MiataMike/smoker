@@ -25,9 +25,9 @@ def steinhartHartCoe(T1,T2,T3,R1,R2,R3):
 def steinhartHartTemp(A, B, C, R):
     # Returns the temperature in K with resistance
     if R == 0.0:
-        T = 9999.0
+        T1 = 9999.0
     else:
-        T = 1 / (A + B * np.log(R) + C * np.log(R)**3)
+        T1 = 1 / (A + B * np.log(R) + C * np.log(R)**3)
         
     return T1
 

@@ -4,21 +4,21 @@ import time
 import datetime
 import numpy as np
 from thermister import *
-from matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 
 # Set port name
-ser = serial.Serial('/dev/ttyACMO')
+ser = serial.Serial('COM6',9600)
 
 # Initialize variables for speeeeeed
-sessionName = '4th_of_july_pork'
+sessionName = 'test_001'
 index = 0
 temperature1 = [0.0]*80000
 temperature2 = [0.0]*80000
 temperature3 = [0.0]*80000
 temperature4 = [0.0]*80000
 toggle = [0]*80000
-ff = open(sessionName + '.csv','w+')
+fcsv = open(sessionName + '.csv','w+')
 bytesToRead = 0
 data_dict = {}
 
@@ -37,17 +37,17 @@ data = ser.read(bytesToRead)
 bytesToRead = 0
 
 while index < 80000:
-    bytesToRead = bytesToRead + ser_inWaiting()
-    if byteToRead > 22:
-        data =ser.read(bytesToRead)
-        data_split = data.split(',')
+    bytesToRead = bytesToRead + ser.inWaiting()
+    if bytesToRead > 22:
+        data = str(ser.read(bytesToRead))
+        data_split = data[2:-5].split(',')
         if len(data_split) < 6:
             # Parse thermocouple data
             temperature1[index] = ((float(data_split[0]) - 1.25)/.005 * 9.0 / 5.0) + 32.0
             temperature2[index] = ((float(data_split[1]) - 1.25)/.005 * 9.0 / 5.0) + 32.0
             
             # Parse thermister data
-            volt3 = float(data_splot[3])
+            volt3 = float(data_split[3])
             volt4 = float(data_split[4])
             resistor3 = voltDivR1( 5.0, volt3, R2)
             resistor4 = voltDivR1( 5.0, volt4, R2)
@@ -56,11 +56,11 @@ while index < 80000:
             
             # Grab toggle value
             toggle[index] = data_split[2]
-            outputStr = str(temperature1[index]) + ', ' + str(temperature2[index[) + ', '
-            outputStr = outputStr + str(toggle[index[) + ', ' + str(round(temperature3[index],1)) + ', ' + str(round(temperature4[index],1))
+            outputStr = '{:.2f}, {:.2f}, '.format(temperature1[index],temperature2[index])
+            outputStr = outputStr + '{}, {:.2f}, {:.2f}'.format(toggle[index],temperature3[index],temperature4[index])
             sys.stdout.write(str(index) + ': ' + outputStr + '\n')
             index = index + 1
-            ff.write(outputStr + '\n')
+            fcsv.write(outputStr + '\n')
         bytesToRead = 0
     if bytesToRead < 23:
         bytesToRead = 0
@@ -70,16 +70,16 @@ while index < 80000:
         ct = datetime.datetime.now()
         # Add all values to dict for export to webpage
         data_dict['SET_MEAT_TYPE'] = 'Pork (Default)'
-        data_dict['SET_DESIREDTEMP'] = 200.0
-        data_dict['SET_CURRENTDURATION'] = index / 3600.0
+        data_dict['SET_DESIREDTEMP'] = '{:.1f}'.format(200.0)
+        data_dict['SET_CURRENTDURATION'] = '{:.2f}'.format(index / 3600.0)
         data_dict['SET_TIME_REMAINING'] = 'TODO'
-        data_dict['SET_PROB_1'] = temperature3[index-1]
+        data_dict['SET_PROB_1'] = '{:.2f}'.format(temperature3[index-1])
         data_dict['SET_PROBE_SLOPE_1'] = 'TODO'
-        data_dict['SET_PROBE_2'] = temperature4[index-1]
+        data_dict['SET_PROBE_2'] = '{:.2f}'.format(temperature4[index-1])
         data_dict['SET_PROBE_SLOPE_2'] = 'TODO'
-        data_dict['SET_SMOKER_1'] = temperature1[index-1]
-        data_dict['SET_SMOKER_2'] = temperature2[index-1]
-        data_dict['SET_AVERAGESMOKER'] = np.mean(temperature1[1:index-1])
+        data_dict['SET_SMOKER_1'] = '{:.2f}'.format(temperature1[index-1])
+        data_dict['SET_SMOKER_2'] = '{:.2f}'.format(temperature2[index-1])
+        data_dict['SET_AVERAGESMOKER'] = '{:.2f}'.format(np.mean(temperature1[1:index-1]))
         data_dict['SET_DATAFILENAME'] = sessionName + '.csv'
         data_dict['SET_MEATTRANSIENTTEMP'] = sessionName + '_probe.png'
         data_dict['SET_SMOKERTRANSIENTTEMP'] = sessionName + '_smoker.png'
