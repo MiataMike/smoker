@@ -5,7 +5,7 @@ import datetime
 import numpy as np
 from thermister import *
 import matplotlib.pyplot as plt
-
+import os
 
 # Set port name
 ser = serial.Serial('COM6',9600)
@@ -62,7 +62,7 @@ while index < 80000:
             index = index + 1
             fcsv.write(outputStr + '\n')
         bytesToRead = 0
-    if bytesToRead < 23:
+    if bytesToRead < 21:
         bytesToRead = 0
     
     # Decide how often to make plots and save data to update webpage
@@ -115,6 +115,16 @@ while index < 80000:
 
         plt.savefig(sessionName + '_probe.png')
         plt.clf()
+        time.sleep(0.1)
+    elif np.mod(index+4,10) == 0:
+        if os.path.exists('../MOVEMOTOR.txt'):
+            with open('../MOVEMOTOR.txt','r') as mm:
+                motor_cmd = float(mm.read())
+            os.remove('../MOVEMOTOR.txt')
+            if motor_cmd > 0:
+                ser.write(b'1')
+            elif motor_cmd < 0:
+                ser.write(b'2')
         time.sleep(0.1)
     else:
         time.sleep(0.1)

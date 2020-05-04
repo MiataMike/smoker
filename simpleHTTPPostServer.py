@@ -13,12 +13,18 @@ class MyHttpRequestHandler(SimpleHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
-        print(body)
+        value = body[9:].decode("utf-8")
+        print(value)
+        with open('MOVEMOTOR.txt','w+') as ff:
+            ff.write(value)
+        
         self.send_response(200)
         self.end_headers()
         with open('index.html','r') as f:
             read_data = f.read()
         self.wfile.write(bytes(read_data, 'utf-8'))
+        
+
 
 # Create an object of the above class
 handler_object = MyHttpRequestHandler
