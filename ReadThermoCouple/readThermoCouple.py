@@ -7,6 +7,8 @@ from thermister import *
 import matplotlib.pyplot as plt
 import os
 
+insaneTemp = 600 #*F Points above this temp are disregarded
+
 # Set port name
 ser = serial.Serial('COM6',9600)
 
@@ -51,8 +53,16 @@ while index < 80000:
             volt4 = float(data_split[4])
             resistor3 = voltDivR1( 5.0, volt3, R2)
             resistor4 = voltDivR1( 5.0, volt4, R2)
-            temperature3[index] = K2F(steinhartHartTemp(coe[0], coe[1], coe[2], resistor3))
-            temperature4[index] = K2F(steinhartHartTemp(coe[0], coe[1], coe[2], resistor4))
+            reading3 = K2F(steinhartHartTemp(coe[0], coe[1], coe[2], resistor3))#temp variable
+            reading4 = K2F(steinhartHartTemp(coe[0], coe[1], coe[2], resistor4))
+            if (reading3 < insaneTemp): #this removes outliers without affecting the reading like filtering would
+                temperature3[index] = reading3
+            else:
+                temperature3[index] = temperature3[index-1] #keep the log continuous and smooth
+            if (reading4 < insaneTemp):
+                temperature4[index] = reading4
+            else:
+                temperature4[index] = temperature4[index-1] 
             
             # Grab toggle value
             toggle[index] = data_split[2]
